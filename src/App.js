@@ -27,6 +27,7 @@ import TourDetailPage from "./component/TourDetailPage";
 import HomePage from "./HomePage";
 import GroupTours from "./component/GroupTours";
 import Services from "./component/Services";
+import Contact from "./component/Contact";
 
 const App = () => {
   return (
@@ -109,6 +110,16 @@ const App = () => {
             <>
               <Navbar />
               <Services />
+            </>
+          }
+        />
+
+        <Route
+          path="/contact"
+          element={
+            <>
+              <Navbar />
+              <Contact />
             </>
           }
         />

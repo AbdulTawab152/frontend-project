@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
+const API_BASE_URL = "https://project-backend-5sjw.onrender.com";
+
 function AdminCardManager() {
   const [activeTab, setActiveTab] = useState('cards'); // 'cards' or 'hotels'
   const [cards, setCards] = useState([]);
@@ -41,8 +43,8 @@ function AdminCardManager() {
     try {
       setLoading(true);
       const [cardsResponse, hotelsResponse] = await Promise.all([
-        axios.get('http://localhost:5000/api/cards'),
-        axios.get('http://localhost:5000/api/hotels')
+        axios.get(`${API_BASE_URL}/api/cards`),
+        axios.get(`${API_BASE_URL}/api/hotels`)
       ]);
       setCards(cardsResponse.data);
       setHotels(hotelsResponse.data);
@@ -110,7 +112,7 @@ function AdminCardManager() {
 
     try {
       const endpoint = type === 'card' ? 'cards' : 'hotels';
-      await axios.delete(`http://localhost:5000/api/${endpoint}/${id}`);
+      await axios.delete(`${API_BASE_URL}/api/${endpoint}/${id}`);
       setSuccess(`${type} deleted successfully`);
       fetchData();
     } catch (err) {
@@ -147,12 +149,12 @@ function AdminCardManager() {
       if (showEditModal) {
         // Update existing item
         const endpoint = activeTab === 'cards' ? 'cards' : 'hotels';
-        await axios.put(`http://localhost:5000/api/${endpoint}/${editingItem._id}`, form);
+        await axios.put(`${API_BASE_URL}/api/${endpoint}/${editingItem._id}`, form);
         setSuccess(`${activeTab === 'cards' ? 'Card' : 'Hotel'} updated successfully`);
       } else {
         // Create new item
         const endpoint = activeTab === 'cards' ? 'cards' : 'hotels';
-        await axios.post(`http://localhost:5000/api/${endpoint}`, form);
+        await axios.post(`${API_BASE_URL}/api/${endpoint}`, form);
         setSuccess(`${activeTab === 'cards' ? 'Card' : 'Hotel'} created successfully`);
       }
 
@@ -275,7 +277,7 @@ function AdminCardManager() {
               <img
                 src={item.image
                   ? item.image.startsWith('/uploads/')
-                    ? `http://localhost:5000${item.image}`
+                    ? `${API_BASE_URL}${item.image}`
                     : item.image
                   : "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80"}
                 alt={item.title || item.name}

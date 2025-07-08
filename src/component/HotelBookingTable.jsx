@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
+const API_BASE_URL = "https://project-backend-5sjw.onrender.com";
+
 function HotelBookingTable() {
   const [bookings, setBookings] = useState([]);
   const [filteredBookings, setFilteredBookings] = useState([]);
@@ -32,7 +34,7 @@ function HotelBookingTable() {
   const fetchBookings = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:5000/api/bookings?type=hotel');
+      const response = await axios.get(`${API_BASE_URL}/api/bookings?type=hotel`);
       setBookings(response.data);
       setFilteredBookings(response.data);
       calculateStats(response.data);
@@ -62,7 +64,7 @@ function HotelBookingTable() {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this booking?')) {
       try {
-        await axios.delete(`http://localhost:5000/api/bookings/${id}`);
+        await axios.delete(`${API_BASE_URL}/api/bookings/${id}`);
         fetchBookings();
       } catch (err) {
         setError('Failed to delete booking');
@@ -74,7 +76,7 @@ function HotelBookingTable() {
   // Update booking status
   const handleStatusUpdate = async (id, newStatus) => {
     try {
-      await axios.put(`http://localhost:5000/api/bookings/${id}`, { status: newStatus });
+      await axios.put(`${API_BASE_URL}/api/bookings/${id}`, { status: newStatus });
       fetchBookings();
     } catch (err) {
       setError('Failed to update booking status');

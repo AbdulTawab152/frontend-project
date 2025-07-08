@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
+const API_BASE_URL = "https://project-backend-5sjw.onrender.com";
+
 const HotelDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -19,7 +21,7 @@ const HotelDetailPage = () => {
   const fetchHotelDetails = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`http://localhost:5000/api/hotels/${id}`);
+      const response = await axios.get(`${API_BASE_URL}/api/hotels/${id}`);
       setHotel(response.data);
     } catch (err) {
       setError('Failed to fetch hotel details');
@@ -115,7 +117,7 @@ const HotelDetailPage = () => {
                 >
                   <img
                     src={image?.startsWith('/uploads/')
-                      ? `http://localhost:5000${image}`
+                      ? `${API_BASE_URL}${image}`
                       : image}
                     alt={`${hotel.name} - Image ${index + 1}`}
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
@@ -366,7 +368,7 @@ const HotelDetailPage = () => {
             
             <img
               src={images[currentImageIndex]?.startsWith('/uploads/')
-                ? `http://localhost:5000${images[currentImageIndex]}`
+                ? `${API_BASE_URL}${images[currentImageIndex]}`
                 : images[currentImageIndex]}
               alt={hotel.name}
               className="max-w-full max-h-full object-contain"

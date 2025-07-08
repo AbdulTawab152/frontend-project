@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const DEFAULT_HOTEL_IMAGE = "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80";
+const API_BASE_URL = "https://project-backend-5sjw.onrender.com";
 
 function HotelList() {
   const [hotels, setHotels] = useState([]);
@@ -21,7 +22,7 @@ function HotelList() {
   const fetchHotels = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:5000/api/hotels');
+      const response = await axios.get(`${API_BASE_URL}/api/hotels`);
       setHotels(response.data);
       setFilteredHotels(response.data);
       setError('');
@@ -36,7 +37,7 @@ function HotelList() {
   // Fetch unique cities
   const fetchCities = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/hotels/cities/list');
+      const response = await axios.get(`${API_BASE_URL}/api/hotels/cities/list`);
       setCities(['All Cities', ...response.data]);
     } catch (err) {
       console.error('Error fetching cities:', err);
@@ -284,7 +285,7 @@ function HotelList() {
                   <img
                     src={hotel.image
                       ? hotel.image.startsWith('/uploads/')
-                        ? `http://localhost:5000${hotel.image}`
+                        ? `${API_BASE_URL}${hotel.image}`
                         : hotel.image
                       : DEFAULT_HOTEL_IMAGE}
                     alt={hotel.name}
@@ -464,7 +465,7 @@ function HotelList() {
                     <img
                       src={hotel.image
                         ? hotel.image.startsWith('/uploads/')
-                          ? `http://localhost:5000${hotel.image}`
+                          ? `${API_BASE_URL}${hotel.image}`
                           : hotel.image
                         : DEFAULT_HOTEL_IMAGE}
                       alt={hotel.name}

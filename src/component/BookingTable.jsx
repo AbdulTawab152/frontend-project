@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
+const API_BASE_URL = "https://project-backend-5sjw.onrender.com";
+
 function BookingTable({ onBackToForm }) {
   const [bookings, setBookings] = useState([]);
   const [filteredBookings, setFilteredBookings] = useState([]);
@@ -27,7 +29,7 @@ function BookingTable({ onBackToForm }) {
   const fetchBookings = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:5000/api/bookings');
+      const response = await axios.get(`${API_BASE_URL}/api/bookings`);
       setBookings(response.data);
       setFilteredBookings(response.data);
       setError('');
@@ -135,7 +137,7 @@ function BookingTable({ onBackToForm }) {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this booking?')) {
       try {
-        await axios.delete(`http://localhost:5000/api/bookings/${id}`);
+        await axios.delete(`${API_BASE_URL}/api/bookings/${id}`);
         const updatedBookings = bookings.filter(booking => booking._id !== id);
         setBookings(updatedBookings);
         setError('');
@@ -164,7 +166,7 @@ function BookingTable({ onBackToForm }) {
   // Handle save edit
   const handleSaveEdit = async (id) => {
     try {
-      const response = await axios.put(`http://localhost:5000/api/bookings/${id}`, editForm);
+      const response = await axios.put(`${API_BASE_URL}/api/bookings/${id}`, editForm);
       const updatedBookings = bookings.map(booking => 
         booking._id === id ? response.data : booking
       );

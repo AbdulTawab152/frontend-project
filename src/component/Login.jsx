@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+const API_BASE_URL = "https://project-backend-5sjw.onrender.com";
+
 function Login() {
   const [formData, setFormData] = useState({
     username: '',
@@ -25,7 +27,7 @@ function Login() {
     setError('');
 
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', formData);
+      const response = await axios.post(`${API_BASE_URL}/api/auth/login`, formData);
       
       // Store token and user data
       localStorage.setItem('token', response.data.token);

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const DEFAULT_IMAGE = "https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1200&q=80";
-const BACKEND_URL = "http://localhost:5000";
+const API_BASE_URL = "https://project-backend-5sjw.onrender.com";
 
 function CardList() {
   const [cards, setCards] = useState([]);
@@ -15,7 +15,7 @@ function CardList() {
 
   const fetchCards = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/cards');
+      const response = await fetch(`${API_BASE_URL}/api/cards`);
       const data = await response.json();
       setCards(data);
     } catch (err) {
@@ -69,7 +69,7 @@ function CardList() {
               <img
                 src={card.image
                   ? card.image.startsWith('/uploads/')
-                    ? BACKEND_URL + card.image
+                    ? API_BASE_URL + card.image
                     : card.image
                   : DEFAULT_IMAGE}
                 alt={card.title}

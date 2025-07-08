@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+const API_BASE_URL = "https://project-backend-5sjw.onrender.com";
+
 function AdminDashboard() {
   const [stats, setStats] = useState({
     totalBookings: 0,
@@ -35,15 +37,15 @@ function AdminDashboard() {
       setLoading(true);
       
       // Fetch all bookings
-      const bookingsResponse = await axios.get('http://localhost:5000/api/bookings');
+      const bookingsResponse = await axios.get(`${API_BASE_URL}/api/bookings`);
       const allBookings = bookingsResponse.data;
       
       // Fetch hotels
-      const hotelsResponse = await axios.get('http://localhost:5000/api/hotels');
+      const hotelsResponse = await axios.get(`${API_BASE_URL}/api/hotels`);
       const hotels = hotelsResponse.data;
       
       // Fetch cards
-      const cardsResponse = await axios.get('http://localhost:5000/api/cards');
+      const cardsResponse = await axios.get(`${API_BASE_URL}/api/cards`);
       const cards = cardsResponse.data;
 
       // Calculate stats

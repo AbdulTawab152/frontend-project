@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Hero from './component/Hero';
 
+const API_BASE_URL = "https://project-backend-5sjw.onrender.com";
+
 const HomePage = () => {
   const [hotels, setHotels] = useState([]);
   const [cards, setCards] = useState([]);
@@ -18,8 +20,8 @@ const HomePage = () => {
     try {
       setLoading(true);
       const [hotelsResponse, cardsResponse] = await Promise.all([
-        axios.get('http://localhost:5000/api/hotels'),
-        axios.get('http://localhost:5000/api/cards')
+        axios.get(`${API_BASE_URL}/api/hotels`),
+        axios.get(`${API_BASE_URL}/api/cards`)
       ]);
       setHotels(hotelsResponse.data.slice(0, 3)); // Show only 3 hotels
       setCards(cardsResponse.data.slice(0, 3)); // Show only 3 cards
@@ -218,7 +220,7 @@ const HomePage = () => {
                     <img
                       src={hotel.image
                         ? hotel.image.startsWith('/uploads/')
-                          ? `http://localhost:5000${hotel.image}`
+                          ? `${API_BASE_URL}${hotel.image}`
                           : hotel.image
                         : "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80"}
                       alt={hotel.name}
@@ -282,7 +284,7 @@ const HomePage = () => {
                     <img
                       src={card.image
                         ? card.image.startsWith('/uploads/')
-                          ? `http://localhost:5000${card.image}`
+                          ? `${API_BASE_URL}${card.image}`
                           : card.image
                         : "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80"}
                       alt={card.title}

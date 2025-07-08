@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
+const API_BASE_URL = "https://project-backend-5sjw.onrender.com";
+
 function AdminHotelManager() {
   const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -36,7 +38,7 @@ function AdminHotelManager() {
   const fetchHotels = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:5000/api/hotels');
+      const response = await axios.get(`${API_BASE_URL}/api/hotels`);
       setHotels(response.data);
     } catch (err) {
       setError('Failed to fetch hotels');
@@ -71,7 +73,7 @@ function AdminHotelManager() {
     if (!window.confirm('Are you sure you want to delete this hotel?')) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/hotels/${id}`);
+      await axios.delete(`${API_BASE_URL}/api/hotels/${id}`);
       setSuccess('Hotel deleted successfully');
       fetchHotels();
     } catch (err) {
@@ -113,7 +115,7 @@ function AdminHotelManager() {
       }
 
       console.log('Sending form data:', Object.fromEntries(form.entries()));
-      await axios.put(`http://localhost:5000/api/hotels/${editingHotel._id}`, form);
+      await axios.put(`${API_BASE_URL}/api/hotels/${editingHotel._id}`, form);
       setSuccess('Hotel updated successfully');
       setShowEditModal(false);
       setEditingHotel(null);
@@ -223,7 +225,7 @@ function AdminHotelManager() {
               <img
                 src={hotel.image
                   ? hotel.image.startsWith('/uploads/')
-                    ? `http://localhost:5000${hotel.image}`
+                    ? `${API_BASE_URL}${hotel.image}`
                     : hotel.image
                   : "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80"}
                 alt={hotel.name}

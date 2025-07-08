@@ -4,6 +4,7 @@ import axios from 'axios';
 import BookingTable from './BookingTable';
 
 const DEFAULT_HOTEL_IMAGE = "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80";
+const API_BASE_URL = "https://project-backend-5sjw.onrender.com";
 
 const initialState = {
   fullName: '',
@@ -67,7 +68,7 @@ function BookingPage() {
         guests: form.guests
       };
 
-      const res = await axios.post('http://localhost:5000/api/bookings', bookingData);
+      const res = await axios.post(`${API_BASE_URL}/api/bookings`, bookingData);
       setSuccess(`Booking successful! Confirmation: ${res.data.confirmation}`);
       setForm(initialState);
     } catch (err) {
@@ -107,11 +108,11 @@ function BookingPage() {
               <img 
                 src={hotelData.image 
                   ? hotelData.image.startsWith('/uploads/')
-                    ? `http://localhost:5000${hotelData.image}`
+                    ? `${API_BASE_URL}${hotelData.image}`
                     : hotelData.image
                   : hotelData.images && hotelData.images.length > 0
                     ? hotelData.images[0].startsWith('/uploads/')
-                      ? `http://localhost:5000${hotelData.images[0]}`
+                      ? `${API_BASE_URL}${hotelData.images[0]}`
                       : hotelData.images[0]
                     : DEFAULT_HOTEL_IMAGE}
                 alt={hotelData.title || hotelData.name}

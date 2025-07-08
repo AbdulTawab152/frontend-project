@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
+const API_BASE_URL = "https://project-backend-5sjw.onrender.com";
+
 function AdminDetailPageManager() {
   const [activeTab, setActiveTab] = useState('hotels');
   const [hotels, setHotels] = useState([]);
@@ -47,8 +49,8 @@ function AdminDetailPageManager() {
     try {
       setLoading(true);
       const [hotelsResponse, cardsResponse] = await Promise.all([
-        axios.get('http://localhost:5000/api/hotels'),
-        axios.get('http://localhost:5000/api/cards')
+        axios.get(`${API_BASE_URL}/api/hotels`),
+        axios.get(`${API_BASE_URL}/api/cards`)
       ]);
       setHotels(hotelsResponse.data);
       setCards(cardsResponse.data);
@@ -134,8 +136,8 @@ function AdminDetailPageManager() {
       console.log('Submitting form data:', Object.fromEntries(form));
 
       const endpoint = editType === 'hotel' 
-        ? `http://localhost:5000/api/hotels/${editingItem._id}`
-        : `http://localhost:5000/api/cards/${editingItem._id}`;
+        ? `${API_BASE_URL}/api/hotels/${editingItem._id}`
+        : `${API_BASE_URL}/api/cards/${editingItem._id}`;
 
       const response = await axios.put(endpoint, form, {
         headers: {
@@ -268,7 +270,7 @@ function AdminDetailPageManager() {
                 <img
                   src={hotel.image
                     ? hotel.image.startsWith('/uploads/')
-                      ? `http://localhost:5000${hotel.image}`
+                      ? `${API_BASE_URL}${hotel.image}`
                       : hotel.image
                     : "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80"}
                   alt={hotel.name}
@@ -322,7 +324,7 @@ function AdminDetailPageManager() {
                 <img
                   src={card.image
                     ? card.image.startsWith('/uploads/')
-                      ? `http://localhost:5000${card.image}`
+                      ? `${API_BASE_URL}${card.image}`
                       : card.image
                     : "https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1200&q=80"}
                   alt={card.name}

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+const API_BASE_URL = "https://project-backend-5sjw.onrender.com";
+
 function HotelBooking() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -113,7 +115,7 @@ function HotelBooking() {
     const nights = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));
 
     try {
-      const response = await axios.post('http://localhost:5000/api/bookings', {
+      const response = await axios.post(`${API_BASE_URL}/api/bookings`, {
         ...bookingData,
         nights,
         bookingType: 'hotel',

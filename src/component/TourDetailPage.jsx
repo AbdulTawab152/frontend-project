@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+const API_BASE_URL = "https://project-backend-5sjw.onrender.com";
+
 const TourDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -18,7 +20,7 @@ const TourDetailPage = () => {
   const fetchTourDetails = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`http://localhost:5000/api/cards/${id}`);
+      const response = await axios.get(`${API_BASE_URL}/api/cards/${id}`);
       setTour(response.data);
     } catch (err) {
       setError('Failed to fetch tour details');
@@ -110,7 +112,7 @@ const TourDetailPage = () => {
                 >
                   <img
                     src={image?.startsWith('/uploads/')
-                      ? `http://localhost:5000${image}`
+                      ? `${API_BASE_URL}${image}`
                       : image}
                     alt={`${tour.name || tour.title} - Image ${index + 1}`}
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
@@ -426,7 +428,7 @@ const TourDetailPage = () => {
             
             <img
               src={images[currentImageIndex]?.startsWith('/uploads/')
-                ? `http://localhost:5000${images[currentImageIndex]}`
+                ? `${API_BASE_URL}${images[currentImageIndex]}`
                 : images[currentImageIndex]}
               alt={tour.name || tour.title}
               className="max-w-full max-h-full object-contain"

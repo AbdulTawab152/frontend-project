@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
+const API_BASE_URL = "https://project-backend-5sjw.onrender.com";
+
 function CardForm({ onCardAdded }) {
   const [formData, setFormData] = useState({
     title: '',
@@ -29,7 +31,7 @@ function CardForm({ onCardAdded }) {
       form.append(key, formData[key]);
     }
 
-    const res = await axios.post('http://localhost:5000/api/cards', form);
+    const res = await axios.post(`${API_BASE_URL}/api/cards`, form);
     onCardAdded(res.data);
   };
 

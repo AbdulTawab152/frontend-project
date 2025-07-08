@@ -25,6 +25,8 @@ import AdminDetailPageManager from "./component/AdminDetailPageManager";
 import HotelDetailPage from "./component/HotelDetailPage";
 import TourDetailPage from "./component/TourDetailPage";
 import HomePage from "./HomePage";
+import GroupTours from "./component/GroupTours";
+import Services from "./component/Services";
 
 const App = () => {
   return (
@@ -98,6 +100,18 @@ const App = () => {
         />
 
         <Route path="/login" element={<Login />} />
+
+        <Route path="/group-tours" element={<GroupTours />} />
+
+        <Route
+          path="/services"
+          element={
+            <>
+              <Navbar />
+              <Services />
+            </>
+          }
+        />
 
         {/* Admin Routes - All protected and wrapped in AdminLayout */}
         <Route

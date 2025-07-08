@@ -123,17 +123,6 @@ const HotelDetailPage = () => {
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                   />
                   
-                  {/* Overlay */}
-                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
-                    <div className="opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0">
-                      <div className="bg-white bg-opacity-90 rounded-full p-3">
-                        <svg className="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
-
                   {/* Image Counter */}
                   <div className="absolute top-3 right-3 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded-full">
                     {index + 1} / {images.length}
@@ -266,11 +255,23 @@ const HotelDetailPage = () => {
                     {hotel.roomTypes.map((roomType, index) => (
                       <div key={index} className="bg-gray-50 rounded-lg p-4">
                         <div className="flex items-center justify-between">
-                          <h4 className="font-semibold text-gray-900">{roomType}</h4>
+                          <h4 className="font-semibold text-gray-900">{roomType.name}</h4>
                           <svg className="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                           </svg>
                         </div>
+                        {roomType.description && (
+                          <div className="text-gray-700 mt-2">{roomType.description}</div>
+                        )}
+                        <div className="text-gray-600 mt-1">Capacity: {roomType.capacity}</div>
+                        <div className="text-gray-600 mt-1">Price: ${roomType.price}</div>
+                        {roomType.features && roomType.features.length > 0 && (
+                          <ul className="list-disc ml-5 mt-2">
+                            {roomType.features.map((feature, i) => (
+                              <li key={i}>{feature}</li>
+                            ))}
+                          </ul>
+                        )}
                       </div>
                     ))}
                   </div>

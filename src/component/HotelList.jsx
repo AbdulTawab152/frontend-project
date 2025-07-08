@@ -326,27 +326,6 @@ function HotelList() {
                       </span>
                     </div>
                   )}
-
-                  {/* Quick Actions Overlay */}
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="flex gap-2">
-                      <button 
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleHotelDetail(hotel);
-                        }}
-                        className="bg-white bg-opacity-90 text-gray-800 px-4 py-2 rounded-full font-semibold hover:bg-white transition-all duration-200 transform hover:scale-105"
-                      >
-                        View Gallery
-                      </button>
-                      <button 
-                        onClick={() => handleHotelSelect(hotel)}
-                        className="bg-blue-600 text-white px-4 py-2 rounded-full font-semibold hover:bg-blue-700 transition-all duration-200 transform hover:scale-105"
-                      >
-                        Book Now
-                      </button>
-                    </div>
-                  </div>
                 </div>
 
                 {/* Content Section */}

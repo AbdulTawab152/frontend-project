@@ -50,7 +50,7 @@ const Navbar = () => {
             <Link to="/hotels" className="nav-link">Hotels</Link>
             <Link to="/services" className="nav-link">Services</Link>
             <Link to="/contact" className="nav-link">Contact</Link>
-            <Link to="/login" className="bg-blue-800 text-white px-5 py-2 rounded-full font-semibold shadow hover:bg-blue-900 transition-colors duration-200 border-2 border-blue-800 hover:border-blue-900">Admin Login</Link>
+            {/* <Link to="/login" className="bg-blue-800 text-white px-5 py-2 rounded-full font-semibold shadow hover:bg-blue-900 transition-colors duration-200 border-2 border-blue-800 hover:border-blue-900">Admin Login</Link> */}
           </div>
 
           {/* Mobile Hamburger */}

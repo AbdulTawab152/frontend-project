@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
-import axios from 'axios';
+import { getUserData, logout } from '../utils/auth';
 
 function AdminLayout() {
   const [user, setUser] = useState(null);
@@ -9,24 +9,18 @@ function AdminLayout() {
   const location = useLocation();
 
   useEffect(() => {
-    // Get user from localStorage
-    const userData = JSON.parse(localStorage.getItem('user') || '{}');
+    // Get user data using auth utility
+    const userData = getUserData();
     setUser(userData);
 
-    // Set axios default header
-    const token = localStorage.getItem('token');
-    if (token) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    } else {
+    // If no user data, redirect to login
+    if (!userData) {
       navigate('/login');
     }
   }, [navigate]);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    delete axios.defaults.headers.common['Authorization'];
-    navigate('/login');
+    logout();
   };
 
   const isActiveRoute = (path) => {
@@ -98,7 +92,7 @@ function AdminLayout() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-gray-50 flex w-full">
       {/* Fixed Sidebar */}
       <div className={`fixed top-0 left-0 h-full w-72 bg-white shadow-lg border-r border-gray-200 transform transition-transform duration-300 ease-in-out z-50 flex flex-col ${
         sidebarOpen ? 'translate-x-0' : '-translate-x-full'
@@ -186,11 +180,11 @@ function AdminLayout() {
         </div>
       </div>
 
-      {/* Main Content Area */}
-      <div className={`flex-1 transition-all duration-300 ease-in-out ${sidebarOpen ? 'ml-72' : 'ml-0'}`}>
+      {/* Main Content Area - Full Width */}
+      <div className={`w-full transition-all duration-300 ease-in-out ${sidebarOpen ? 'ml-72' : 'ml-0'}`}>
         {/* Top Navigation Bar */}
-        <div className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-30">
-          <div className="flex items-center justify-between px-6 py-4">
+        <div className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-30 w-full">
+          <div className="flex items-center justify-between px-6 py-4 w-full">
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -226,8 +220,8 @@ function AdminLayout() {
           </div>
         </div>
 
-        {/* Page Content */}
-        <main className="p-6">
+        {/* Page Content - Full Width */}
+        <main className="w-full p-6">
           <Outlet />
         </main>
       </div>

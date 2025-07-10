@@ -25,12 +25,12 @@ const GroupTours = () => {
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 py-10">
         <div className="max-w-7xl mx-auto px-4 mb-8">
           <div className="text-center mb-10">
-            <h1 className="text-5xl font-extrabold text-blue-800 drop-shadow-lg tracking-tight mb-3">Discover Group Tours</h1>
+            <h1 className="text-5xl font-extrabold text-blue-800 drop-shadow-sm tracking-tight mb-3">Discover Group Tours</h1>
             <p className="text-xl text-gray-600 font-medium max-w-2xl mx-auto">Explore Afghanistan's most beautiful destinations with our curated group tours. Filter by province or search by name to find your next adventure!</p>
           </div>
           {/* Sticky Filter Bar */}
           <div className="sticky top-4 z-20">
-            <div className="flex flex-wrap gap-6 justify-center items-center bg-white/60 backdrop-blur-lg rounded-3xl shadow-2xl border border-blue-100 p-6 transition-all duration-300">
+            <div className="flex flex-wrap gap-6 justify-center items-center bg-white/60 backdrop-blur-lg rounded-3xl shadow-sm border border-blue-100 p-6 transition-all duration-300">
               {/* Province Filter */}
               <div className="flex flex-col items-start min-w-[180px]">
                 <label className="flex items-center gap-2 text-sm font-semibold text-blue-700 mb-1">

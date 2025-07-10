@@ -17,7 +17,7 @@ const Contact = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 py-12 flex flex-col items-center">
-      <div className="max-w-4xl w-full bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl border border-blue-100 p-8 mb-10">
+      <div className="max-w-4xl w-full bg-white/80 backdrop-blur-lg rounded-3xl shadow-sm border border-blue-100 p-8 mb-10">
         <h1 className="text-4xl font-extrabold text-blue-900 mb-2 text-center">Contact Us</h1>
         <p className="text-lg text-gray-600 mb-8 text-center">We'd love to hear from you! Fill out the form or reach us directly using the info below.</p>
         <div className="flex flex-col md:flex-row gap-10">
@@ -42,7 +42,7 @@ const Contact = () => {
             </div>
           </div>
           {/* Contact Form */}
-          <form onSubmit={handleSubmit} className="flex-1 bg-white/90 rounded-2xl shadow-lg p-6 flex flex-col gap-4 border border-blue-50">
+          <form onSubmit={handleSubmit} className="flex-1 bg-white/90 rounded-2xl shadow-sm p-6 flex flex-col gap-4 border border-blue-50">
             <div className="flex gap-4">
               <input
                 type="text"

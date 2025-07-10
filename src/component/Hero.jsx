@@ -1,21 +1,25 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import img1 from"../assite/2.jpg"
+import img2 from"../assite/4.jpg"
+import img3 from"../assite/5.jpg"
+import img4 from"../assite/6.jpg"
 
 const images = [
   {
-    url: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=2000&q=80',
+    url: img1,
     caption: 'Majestic Mountains of Afghanistan',
   },
   {
-    url: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=2000&q=80',
+    url: img2,
     caption: 'Serene Lakes and Reflections',
   },
   {
-    url: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=2000&q=80',
+    url: img3,
     caption: 'Historic Architecture and Culture',
   },
   {
-    url: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=2000&q=80',
+    url: img4,
     caption: 'Adventure Awaits in Every Corner',
   },
 ];

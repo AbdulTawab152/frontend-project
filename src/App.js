@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
 } from "react-router-dom";
+import { initializeAuth } from "./utils/auth";
 import Navbar from "./component/Navbar";
 import CardList from "./component/CardList";
 import "./index.css";
@@ -30,6 +31,11 @@ import Services from "./component/Services";
 import Contact from "./component/Contact";
 
 const App = () => {
+  // Initialize authentication state on app startup
+  useEffect(() => {
+    initializeAuth();
+  }, []);
+
   return (
     <Router>
       <Routes>

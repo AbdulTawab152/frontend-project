@@ -8,8 +8,6 @@ const API_BASE_URL = "https://project-backend-5sjw.onrender.com";
 function HotelList() {
   const [hotels, setHotels] = useState([]);
   const [filteredHotels, setFilteredHotels] = useState([]);
-  const [cities, setCities] = useState(['All Cities']);
-  const [selectedCity, setSelectedCity] = useState('All Cities');
   const [searchTerm, setSearchTerm] = useState('');
   const [priceRange, setPriceRange] = useState({ min: '', max: '' });
   const [selectedRating, setSelectedRating] = useState('all');
@@ -34,36 +32,19 @@ function HotelList() {
     }
   };
 
-  // Fetch unique cities
-  const fetchCities = async () => {
-    try {
-      const response = await axios.get(`${API_BASE_URL}/api/hotels/cities/list`);
-      setCities(['All Cities', ...response.data]);
-    } catch (err) {
-      console.error('Error fetching cities:', err);
-    }
-  };
-
   useEffect(() => {
     fetchHotels();
-    fetchCities();
   }, []);
 
   // Filter hotels based on selected criteria
   useEffect(() => {
     let filtered = [...hotels];
 
-    // City filter
-    if (selectedCity !== 'All Cities') {
-      filtered = filtered.filter(hotel => hotel.city === selectedCity);
-    }
-
     // Search filter
     if (searchTerm) {
       filtered = filtered.filter(hotel =>
         hotel.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        hotel.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        hotel.city.toLowerCase().includes(searchTerm.toLowerCase())
+        hotel.description.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
@@ -82,7 +63,7 @@ function HotelList() {
     }
 
     setFilteredHotels(filtered);
-  }, [hotels, selectedCity, searchTerm, priceRange, selectedRating]);
+  }, [hotels, searchTerm, priceRange, selectedRating]);
 
   // Handle hotel selection
   const handleHotelSelect = (hotel) => {
@@ -107,23 +88,14 @@ function HotelList() {
     return stars;
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <div className="text-xl text-gray-600 font-medium">Loading hotels...</div>
-        </div>
-      </div>
-    );
-  }
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header Section */}
-        <div className="bg-white rounded-3xl shadow-xl p-8 mb-8 border border-gray-100">
-          <div className="text-center">
+        {/* Combined Header and Filters Section */}
+        <div className="bg-white rounded-3xl shadow-sm p-8 mb-8 border border-gray-100">
+          <div className="text-center mb-8">
             <h1 className="text-4xl font-bold text-gray-800 mb-4">Find Your Perfect Hotel</h1>
             <p className="text-gray-600 text-lg mb-6">Discover amazing hotels across Afghanistan</p>
             
@@ -132,7 +104,7 @@ function HotelList() {
               <div className="relative">
                 <input
                   type="text"
-                  placeholder="Search hotels by name, description, or city..."
+                  placeholder="Search hotels by name or description..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-full p-4 pl-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
@@ -142,22 +114,91 @@ function HotelList() {
                 </svg>
               </div>
             </div>
+          </div>
 
-            {/* City Filter */}
-            <div className="flex flex-wrap justify-center gap-3">
-              {cities.map(city => (
-                <button
-                  key={city}
-                  onClick={() => setSelectedCity(city)}
-                  className={`px-6 py-3 rounded-full font-semibold transition-all duration-200 ${
-                    selectedCity === city
-                      ? 'bg-blue-600 text-white shadow-lg'
-                      : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
-                  }`}
+          {/* Filters Section */}
+          <div className="border-t border-gray-200 pt-6">
+            <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-gray-800">Additional Filters</h2>
+              
+              {/* View Mode Toggle */}
+              <div className="flex items-center gap-2 mt-4 md:mt-0">
+                <span className="text-sm text-gray-600 mr-2">View:</span>
+                <div className="flex bg-gray-100 rounded-lg p-1">
+                  <button
+                    onClick={() => setViewMode('grid')}
+                    className={`px-3 py-2 rounded-md text-sm font-medium transition-all ${
+                      viewMode === 'grid' 
+                        ? 'bg-white text-blue-600 shadow-sm' 
+                        : 'text-gray-600 hover:text-gray-800'
+                    }`}
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                    </svg>
+                  </button>
+                  <button
+                    onClick={() => setViewMode('list')}
+                    className={`px-3 py-2 rounded-md text-sm font-medium transition-all ${
+                      viewMode === 'list' 
+                        ? 'bg-white text-blue-600 shadow-sm' 
+                        : 'text-gray-600 hover:text-gray-800'
+                    }`}
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Price Range */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Price Range ($)</label>
+                <div className="flex gap-2">
+                  <input
+                    type="number"
+                    placeholder="Min"
+                    value={priceRange.min}
+                    onChange={(e) => setPriceRange(prev => ({ ...prev, min: e.target.value }))}
+                    className="w-1/2 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                  <input
+                    type="number"
+                    placeholder="Max"
+                    value={priceRange.max}
+                    onChange={(e) => setPriceRange(prev => ({ ...prev, max: e.target.value }))}
+                    className="w-1/2 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+              </div>
+
+              {/* Rating Filter */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Minimum Rating</label>
+                <select
+                  value={selectedRating}
+                  onChange={(e) => setSelectedRating(e.target.value)}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
-                  {city}
-                </button>
-              ))}
+                  <option value="all">All Ratings</option>
+                  <option value="4.5">4.5+ Stars</option>
+                  <option value="4.0">4.0+ Stars</option>
+                  <option value="3.5">3.5+ Stars</option>
+                  <option value="3.0">3.0+ Stars</option>
+                </select>
+              </div>
+
+              {/* Results Count */}
+              <div className="flex items-end">
+                <div className="text-center w-full">
+                  <p className="text-sm text-gray-600">Found</p>
+                  <p className="text-2xl font-bold text-blue-600">{filteredHotels.length}</p>
+                  <p className="text-sm text-gray-600">hotels</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -174,95 +215,43 @@ function HotelList() {
           </div>
         )}
 
-        {/* Filters Section */}
-        <div className="bg-white rounded-3xl shadow-xl p-6 mb-8 border border-gray-100">
-          <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-800">Additional Filters</h2>
-            
-            {/* View Mode Toggle */}
-            <div className="flex items-center gap-2 mt-4 md:mt-0">
-              <span className="text-sm text-gray-600 mr-2">View:</span>
-              <div className="flex bg-gray-100 rounded-lg p-1">
-                <button
-                  onClick={() => setViewMode('grid')}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-all ${
-                    viewMode === 'grid' 
-                      ? 'bg-white text-blue-600 shadow-sm' 
-                      : 'text-gray-600 hover:text-gray-800'
-                  }`}
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-                  </svg>
-                </button>
-                <button
-                  onClick={() => setViewMode('list')}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-all ${
-                    viewMode === 'list' 
-                      ? 'bg-white text-blue-600 shadow-sm' 
-                      : 'text-gray-600 hover:text-gray-800'
-                  }`}
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Price Range */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Price Range ($)</label>
-              <div className="flex gap-2">
-                <input
-                  type="number"
-                  placeholder="Min"
-                  value={priceRange.min}
-                  onChange={(e) => setPriceRange(prev => ({ ...prev, min: e.target.value }))}
-                  className="w-1/2 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-                <input
-                  type="number"
-                  placeholder="Max"
-                  value={priceRange.max}
-                  onChange={(e) => setPriceRange(prev => ({ ...prev, max: e.target.value }))}
-                  className="w-1/2 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-            </div>
-
-            {/* Rating Filter */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Minimum Rating</label>
-              <select
-                value={selectedRating}
-                onChange={(e) => setSelectedRating(e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                <option value="all">All Ratings</option>
-                <option value="4.5">4.5+ Stars</option>
-                <option value="4.0">4.0+ Stars</option>
-                <option value="3.5">3.5+ Stars</option>
-                <option value="3.0">3.0+ Stars</option>
-              </select>
-            </div>
-
-            {/* Results Count */}
-            <div className="flex items-end">
-              <div className="text-center w-full">
-                <p className="text-sm text-gray-600">Found</p>
-                <p className="text-2xl font-bold text-blue-600">{filteredHotels.length}</p>
-                <p className="text-sm text-gray-600">hotels</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
         {/* Hotels Gallery */}
-        {filteredHotels.length === 0 ? (
-          <div className="bg-white rounded-3xl shadow-xl p-16 text-center">
+        {loading ? (
+          // Placeholder hotels while loading
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <div key={index} className="bg-white rounded-3xl shadow-sm overflow-hidden border border-gray-100 animate-pulse">
+                {/* Image Placeholder */}
+                <div className="h-64 bg-gray-200"></div>
+                
+                {/* Content Placeholder */}
+                <div className="p-6">
+                  <div className="w-48 h-6 bg-gray-200 rounded mb-2"></div>
+                  <div className="w-32 h-4 bg-gray-200 rounded mb-3"></div>
+                  <div className="w-full h-4 bg-gray-200 rounded mb-2"></div>
+                  <div className="w-3/4 h-4 bg-gray-200 rounded mb-4"></div>
+                  
+                  {/* Amenities Placeholder */}
+                  <div className="flex flex-wrap gap-1 mb-4">
+                    <div className="w-16 h-6 bg-gray-200 rounded-full"></div>
+                    <div className="w-20 h-6 bg-gray-200 rounded-full"></div>
+                    <div className="w-14 h-6 bg-gray-200 rounded-full"></div>
+                  </div>
+                  
+                  {/* Price and Buttons Placeholder */}
+                  <div className="pt-4 border-t border-gray-100">
+                    <div className="w-24 h-8 bg-gray-200 rounded mb-3"></div>
+                    <div className="flex gap-2">
+                      <div className="flex-1 h-12 bg-gray-200 rounded-xl"></div>
+                      <div className="flex-1 h-12 bg-gray-200 rounded-xl"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : filteredHotels.length === 0 ? (
+          <div className="bg-white rounded-3xl shadow-sm p-16 text-center">
             <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
@@ -277,7 +266,7 @@ function HotelList() {
             {filteredHotels.map((hotel, index) => (
               <div
                 key={hotel._id}
-                className="group bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2"
+                className="group bg-white rounded-3xl shadow-sm overflow-hidden border border-gray-100 hover:shadow-sm transition-all duration-500 transform hover:-translate-y-2"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
                 {/* Image Section with Gallery */}
@@ -297,11 +286,11 @@ function HotelList() {
                   
                   {/* Badges */}
                   <div className="absolute top-4 left-4 flex flex-col gap-2">
-                    <span className="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg backdrop-blur-sm">
+                    <span className="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm backdrop-blur-sm">
                       {hotel.city}
                     </span>
                     {hotel.bookingEnabled !== false && (
-                      <span className="bg-green-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg backdrop-blur-sm">
+                      <span className="bg-green-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm backdrop-blur-sm">
                         Available
                       </span>
                     )}
@@ -309,7 +298,7 @@ function HotelList() {
                   
                   {/* Rating Badge */}
                   <div className="absolute top-4 right-4">
-                    <div className="flex items-center bg-white bg-opacity-95 backdrop-blur-sm px-3 py-2 rounded-full shadow-lg">
+                    <div className="flex items-center bg-white bg-opacity-95 backdrop-blur-sm px-3 py-2 rounded-full shadow-sm">
                       {renderStars(hotel.rating)}
                       <span className="ml-1 text-sm font-semibold text-gray-700">{hotel.rating}</span>
                     </div>
@@ -413,13 +402,13 @@ function HotelList() {
                           e.stopPropagation();
                           handleHotelDetail(hotel);
                         }}
-                        className="flex-1 bg-gray-600 text-white px-4 py-3 rounded-xl font-semibold hover:bg-gray-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                        className="flex-1 bg-gray-600 text-white px-4 py-3 rounded-xl font-semibold hover:bg-gray-700 transition-all duration-200 shadow-sm hover:shadow-xl transform hover:scale-105"
                       >
                         View Details
                       </button>
                       <button 
                         onClick={() => handleHotelSelect(hotel)}
-                        className="flex-1 bg-blue-600 text-white px-4 py-3 rounded-xl font-semibold hover:bg-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                        className="flex-1 bg-blue-600 text-white px-4 py-3 rounded-xl font-semibold hover:bg-blue-700 transition-all duration-200 shadow-sm hover:shadow-xl transform hover:scale-105"
                       >
                         Book Now
                       </button>
@@ -456,11 +445,11 @@ function HotelList() {
                     
                     {/* Badges */}
                     <div className="absolute top-4 left-4 flex flex-col gap-2">
-                      <span className="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+                      <span className="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">
                         {hotel.city}
                       </span>
                       {hotel.bookingEnabled !== false && (
-                        <span className="bg-green-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+                        <span className="bg-green-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">
                           Available
                         </span>
                       )}
@@ -468,7 +457,7 @@ function HotelList() {
                     
                     {/* Rating Badge */}
                     <div className="absolute top-4 right-4">
-                      <div className="flex items-center bg-white bg-opacity-90 backdrop-blur-sm px-3 py-2 rounded-full shadow-lg">
+                      <div className="flex items-center bg-white bg-opacity-90 backdrop-blur-sm px-3 py-2 rounded-full shadow-sm">
                         {renderStars(hotel.rating)}
                         <span className="ml-1 text-sm font-semibold text-gray-700">{hotel.rating}</span>
                       </div>

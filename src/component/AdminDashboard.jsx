@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { getUserData } from '../utils/auth';
 
 const API_BASE_URL = "https://project-backend-5sjw.onrender.com";
 
@@ -19,15 +20,9 @@ function AdminDashboard() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Get user from localStorage
-    const userData = JSON.parse(localStorage.getItem('user') || '{}');
+    // Get user data using auth utility
+    const userData = getUserData();
     setUser(userData);
-
-    // Set axios default header
-    const token = localStorage.getItem('token');
-    if (token) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    }
 
     fetchDashboardStats();
   }, []);
@@ -73,10 +68,8 @@ function AdminDashboard() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    delete axios.defaults.headers.common['Authorization'];
-    navigate('/login');
+    // This function is no longer needed as logout is handled in AdminLayout
+    // Keeping for potential future use
   };
 
   const formatDate = (dateString) => {
@@ -184,19 +177,10 @@ function AdminDashboard() {
     }
   ];
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-96">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading dashboard...</p>
-        </div>
-      </div>
-    );
-  }
+
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full">
       {/* Header */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 lg:p-8">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
@@ -220,34 +204,53 @@ function AdminDashboard() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-        {statCards.map((stat, index) => (
-          <div
-            key={index}
-            className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 lg:p-6 cursor-pointer hover:shadow-lg hover:scale-105 transition-all duration-300 group"
-            onClick={() => navigate(stat.path)}
-          >
-            <div className="flex items-center justify-between mb-4">
-              <div className={`p-2 lg:p-3 rounded-xl bg-gradient-to-r ${stat.bgGradient} group-hover:scale-110 transition-transform duration-300`}>
-                <div className={`text-white bg-gradient-to-r ${stat.gradient} p-2 rounded-lg`}>
-                  {stat.icon}
+        {loading ? (
+          // Placeholder cards while loading
+          Array.from({ length: 4 }).map((_, index) => (
+            <div
+              key={index}
+              className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 lg:p-6 animate-pulse"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <div className="p-2 lg:p-3 rounded-xl bg-gray-200 w-12 h-12"></div>
+                <div className="w-16 h-6 bg-gray-200 rounded-full"></div>
+              </div>
+              <div>
+                <div className="w-24 h-4 bg-gray-200 rounded mb-2"></div>
+                <div className="w-16 h-8 bg-gray-200 rounded"></div>
+              </div>
+            </div>
+          ))
+        ) : (
+          statCards.map((stat, index) => (
+            <div
+              key={index}
+              className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 lg:p-6 cursor-pointer hover:shadow-lg hover:scale-105 transition-all duration-300 group"
+              onClick={() => navigate(stat.path)}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <div className={`p-2 lg:p-3 rounded-xl bg-gradient-to-r ${stat.bgGradient} group-hover:scale-110 transition-transform duration-300`}>
+                  <div className={`text-white bg-gradient-to-r ${stat.gradient} p-2 rounded-lg`}>
+                    {stat.icon}
+                  </div>
+                </div>
+                <div className="text-right">
+                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                    stat.changeType === 'positive' 
+                      ? 'bg-green-100 text-green-800' 
+                      : 'bg-red-100 text-red-800'
+                  }`}>
+                    {stat.change}
+                  </span>
                 </div>
               </div>
-              <div className="text-right">
-                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                  stat.changeType === 'positive' 
-                    ? 'bg-green-100 text-green-800' 
-                    : 'bg-red-100 text-red-800'
-                }`}>
-                  {stat.change}
-                </span>
+              <div>
+                <p className="text-sm font-medium text-gray-600 mb-1">{stat.title}</p>
+                <p className="text-2xl lg:text-3xl font-bold text-gray-900">{stat.value}</p>
               </div>
             </div>
-            <div>
-              <p className="text-sm font-medium text-gray-600 mb-1">{stat.title}</p>
-              <p className="text-2xl lg:text-3xl font-bold text-gray-900">{stat.value}</p>
-            </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
 
       {/* Quick Actions and Recent Bookings Grid */}
@@ -256,21 +259,37 @@ function AdminDashboard() {
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 lg:p-8">
           <h2 className="text-xl lg:text-2xl font-bold text-gray-900 mb-6">Quick Actions</h2>
           <div className="space-y-4">
-            {quickActions.map((action, index) => (
-              <button
-                key={index}
-                onClick={() => navigate(action.path)}
-                className={`bg-gradient-to-r ${action.gradient} text-white p-4 lg:p-6 rounded-2xl text-left hover:shadow-lg hover:scale-105 transition-all duration-300 group w-full`}
-              >
-                <div className="flex items-center mb-3">
-                  <div className="w-10 h-10 lg:w-12 lg:h-12 bg-white bg-opacity-20 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                    {action.icon}
+            {loading ? (
+              // Placeholder quick actions while loading
+              Array.from({ length: 3 }).map((_, index) => (
+                <div
+                  key={index}
+                  className="bg-gray-200 p-4 lg:p-6 rounded-2xl animate-pulse"
+                >
+                  <div className="flex items-center mb-3">
+                    <div className="w-10 h-10 lg:w-12 lg:h-12 bg-gray-300 rounded-xl"></div>
+                    <div className="ml-3 lg:ml-4 w-32 h-6 bg-gray-300 rounded"></div>
                   </div>
-                  <h3 className="ml-3 lg:ml-4 text-base lg:text-lg font-semibold">{action.title}</h3>
+                  <div className="w-48 h-4 bg-gray-300 rounded"></div>
                 </div>
-                <p className="text-sm opacity-90">{action.description}</p>
-              </button>
-            ))}
+              ))
+            ) : (
+              quickActions.map((action, index) => (
+                <button
+                  key={index}
+                  onClick={() => navigate(action.path)}
+                  className={`bg-gradient-to-r ${action.gradient} text-white p-4 lg:p-6 rounded-2xl text-left hover:shadow-lg hover:scale-105 transition-all duration-300 group w-full`}
+                >
+                  <div className="flex items-center mb-3">
+                    <div className="w-10 h-10 lg:w-12 lg:h-12 bg-white bg-opacity-20 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      {action.icon}
+                    </div>
+                    <h3 className="ml-3 lg:ml-4 text-base lg:text-lg font-semibold">{action.title}</h3>
+                  </div>
+                  <p className="text-sm opacity-90">{action.description}</p>
+                </button>
+              ))
+            )}
           </div>
         </div>
 
@@ -289,7 +308,26 @@ function AdminDashboard() {
             </button>
           </div>
           
-          {stats.recentBookings.length === 0 ? (
+          {loading ? (
+            // Placeholder recent bookings while loading
+            <div className="space-y-3">
+              {Array.from({ length: 3 }).map((_, index) => (
+                <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl animate-pulse">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
+                    <div>
+                      <div className="w-24 h-4 bg-gray-200 rounded mb-1"></div>
+                      <div className="w-16 h-3 bg-gray-200 rounded"></div>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="w-16 h-4 bg-gray-200 rounded mb-1"></div>
+                    <div className="w-12 h-6 bg-gray-200 rounded-full"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : stats.recentBookings.length === 0 ? (
             <div className="text-center py-8">
               <div className="w-16 h-16 lg:w-24 lg:h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg className="w-8 h-8 lg:w-12 lg:h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Mail, Phone, MapPin, Facebook, Twitter, Instagram, Send } from 'lucide-react';
+import axios from 'axios';
 
 const Contact = () => {
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
@@ -9,10 +10,14 @@ const Contact = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
-    // Here you would send the form data to your backend or email service
+    try {
+      await axios.post('https://your-backend.onrender.com/api/contact', form); // Use your actual Render backend URL
+      setSubmitted(true);
+    } catch (err) {
+      alert('Failed to send message. Please try again later.');
+    }
   };
 
   return (

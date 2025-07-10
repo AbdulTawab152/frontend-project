@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Globe2, Facebook, Twitter, Instagram, Phone, Mail, MapPin, Clock, MessageCircle, Send } from 'lucide-react';
+import axios from 'axios';
 
 const Footer = () => {
   const handleWhatsAppCall = () => {
@@ -9,6 +10,9 @@ const Footer = () => {
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
+
+  const [email, setEmail] = useState('');
+  const [submitted, setSubmitted] = useState(false);
 
   return (
     <footer className="relative bg-gradient-to-br from-blue-50/80 via-white/80 to-purple-100/80 backdrop-blur-xl border-t border-blue-100 shadow-inner mt-16">
@@ -85,9 +89,15 @@ const Footer = () => {
               <h4 className="text-blue-800 font-bold text-lg">Newsletter</h4>
             </div>
             <p className="text-gray-600 text-sm mb-2">Get travel tips, deals, and updates in your inbox.</p>
-            <form className="flex w-full max-w-xs gap-2">
+            <form
+              action="https://formsubmit.co/YOUR_RECEIVING_EMAIL@gmail.com"
+              method="POST"
+              className="flex w-full max-w-xs gap-2"
+            >
               <input
                 type="email"
+                name="email"
+                required
                 placeholder="Your email address"
                 className="flex-1 px-4 py-2 rounded-lg border border-blue-200 focus:ring-2 focus:ring-blue-400 focus:outline-none text-sm bg-white/80"
               />

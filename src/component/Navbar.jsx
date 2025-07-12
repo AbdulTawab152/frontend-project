@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X, ChevronDown, ChevronUp, HelpCircle, Briefcase } from 'lucide-react';
-import Contact from './Contact';
+
 
 const faqs = [
   {
@@ -47,9 +47,10 @@ const Navbar = () => {
           <div className="hidden md:flex space-x-8 items-center">
             <Link to="/" className="nav-link">Home</Link>
             <Link to="/group-tours" className="nav-link">Group Tours</Link>
-            <Link to="/hotels" className="nav-link">Hotels</Link>
-            <Link to="/services" className="nav-link">Services</Link>
-            <Link to="/contact" className="nav-link">Contact</Link>
+                          <Link to="/hotels" className="nav-link">Hotels</Link>
+              <Link to="/services" className="nav-link">Services</Link>
+              <Link to="/contact" className="nav-link">Contact</Link>
+    
             {/* <Link to="/login" className="bg-blue-800 text-white px-5 py-2 rounded-full font-semibold shadow hover:bg-blue-900 transition-colors duration-200 border-2 border-blue-800 hover:border-blue-900">Admin Login</Link> */}
           </div>
 
@@ -66,9 +67,10 @@ const Navbar = () => {
           <div className="md:hidden mt-2 space-y-2 pb-4 bg-white/80 backdrop-blur-md rounded-b-xl shadow animate-fade-in-down px-4 pt-4 border border-white/30">
             <Link to="/" onClick={toggleMenu} className="mobile-nav-link">Home</Link>
             <Link to="/group-tours" onClick={toggleMenu} className="mobile-nav-link">Group Tours</Link>
-            <Link to="/hotels" onClick={toggleMenu} className="mobile-nav-link">Hotels</Link>
-            <Link to="/services" onClick={toggleMenu} className="mobile-nav-link">Services</Link>
-            <Link to="/contact" onClick={toggleMenu} className="mobile-nav-link">Contact</Link>
+                          <Link to="/hotels" onClick={toggleMenu} className="mobile-nav-link">Hotels</Link>
+              <Link to="/services" onClick={toggleMenu} className="mobile-nav-link">Services</Link>
+              <Link to="/contact" onClick={toggleMenu} className="mobile-nav-link">Contact</Link>
+    
             <Link to="/login" onClick={toggleMenu} className="block bg-blue-800 text-white px-5 py-2 rounded-full font-semibold shadow hover:bg-blue-900 w-fit transition-colors border-2 border-blue-800 hover:border-blue-900">Admin Login</Link>
           </div>
         )}

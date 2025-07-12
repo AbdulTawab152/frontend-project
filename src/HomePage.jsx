@@ -4,7 +4,7 @@ import axios from 'axios';
 import Hero from './component/Hero';
 import Footer from './component/Footer';
 
-const API_BASE_URL = "https://project-backend-5sjw.onrender.com";
+const API_BASE_URL = "http://localhost:5001";
 
 const HomePage = () => {
   const [hotels, setHotels] = useState([]);

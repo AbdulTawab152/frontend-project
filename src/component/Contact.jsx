@@ -1,108 +1,131 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Facebook, Twitter, Instagram, Send } from 'lucide-react';
 import axios from 'axios';
 
 const Contact = () => {
-  const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
-  const [submitted, setSubmitted] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  });
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState('');
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError('');
+    setSuccess(false);
+
     try {
-      await axios.post('https://your-backend.onrender.com/api/contact', form); // Use your actual Render backend URL
-      setSubmitted(true);
-    } catch (err) {
-      alert('Failed to send message. Please try again later.');
+      const response = await axios.post('http://localhost:5001/api/contact', formData);
+      
+      if (response.data.success) {
+        setSuccess(true);
+        setFormData({ name: '', email: '', subject: '', message: '' });
+      }
+    } catch (error) {
+      setError(error.response?.data?.message || 'Failed to send message');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 py-12 flex flex-col items-center">
-      <div className="max-w-4xl w-full bg-white/80 backdrop-blur-lg rounded-3xl shadow-sm border border-blue-100 p-8 mb-10">
-        <h1 className="text-4xl font-extrabold text-blue-900 mb-2 text-center">Contact Us</h1>
-        <p className="text-lg text-gray-600 mb-8 text-center">We'd love to hear from you! Fill out the form or reach us directly using the info below.</p>
-        <div className="flex flex-col md:flex-row gap-10">
-          {/* Contact Info */}
-          <div className="flex-1 flex flex-col gap-6 justify-center">
-            <div className="flex items-center gap-3 text-blue-800">
-              <Phone className="w-6 h-6" />
-              <span className="font-semibold">+93 700 123 456</span>
+    <div className="min-h-screen bg-gray-50 py-12">
+      <div className="max-w-2xl mx-auto px-4">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-6 text-center">Contact Us</h1>
+          
+          {success && (
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+              <p className="text-green-800">Message sent successfully!</p>
             </div>
-            <div className="flex items-center gap-3 text-blue-800">
-              <Mail className="w-6 h-6" />
-              <span className="font-semibold">info@grouptours.af</span>
+          )}
+
+          {error && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+              <p className="text-red-800">{error}</p>
             </div>
-            <div className="flex items-center gap-3 text-blue-800">
-              <MapPin className="w-6 h-6" />
-              <span className="font-semibold">Kabul, Afghanistan</span>
-            </div>
-            <div className="flex gap-4 mt-2">
-              <a href="#" className="text-blue-500 hover:text-blue-700"><Facebook className="w-5 h-5" /></a>
-              <a href="#" className="text-blue-500 hover:text-blue-700"><Twitter className="w-5 h-5" /></a>
-              <a href="#" className="text-blue-500 hover:text-blue-700"><Instagram className="w-5 h-5" /></a>
-            </div>
-          </div>
-          {/* Contact Form */}
-          <form onSubmit={handleSubmit} className="flex-1 bg-white/90 rounded-2xl shadow-sm p-6 flex flex-col gap-4 border border-blue-50">
-            <div className="flex gap-4">
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Name
+              </label>
               <input
                 type="text"
                 name="name"
-                value={form.name}
+                value={formData.name}
                 onChange={handleChange}
-                placeholder="Your Name"
                 required
-                className="w-1/2 rounded-lg border border-blue-200 px-4 py-3 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-all"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Your name"
               />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Email
+              </label>
               <input
                 type="email"
                 name="email"
-                value={form.email}
+                value={formData.email}
                 onChange={handleChange}
-                placeholder="Your Email"
                 required
-                className="w-1/2 rounded-lg border border-blue-200 px-4 py-3 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-all"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="your@email.com"
               />
             </div>
-            <input
-              type="text"
-              name="subject"
-              value={form.subject}
-              onChange={handleChange}
-              placeholder="Subject"
-              required
-              className="rounded-lg border border-blue-200 px-4 py-3 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-all"
-            />
-            <textarea
-              name="message"
-              value={form.message}
-              onChange={handleChange}
-              placeholder="Your Message"
-              required
-              rows={5}
-              className="rounded-lg border border-blue-200 px-4 py-3 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-all resize-none"
-            />
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Subject
+              </label>
+              <input
+                type="text"
+                name="subject"
+                value={formData.subject}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Message subject"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Message
+              </label>
+              <textarea
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
+                required
+                rows={5}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Your message"
+              />
+            </div>
+
             <button
               type="submit"
-              className="flex items-center justify-center gap-2 bg-blue-700 text-white font-semibold px-6 py-3 rounded-xl shadow hover:bg-blue-800 transition-all text-lg mt-2"
+              disabled={loading}
+              className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <Send className="w-5 h-5" /> Send Message
+              {loading ? 'Sending...' : 'Send Message'}
             </button>
-            {submitted && (
-              <div className="text-green-600 font-semibold mt-2">Thank you for contacting us! We'll get back to you soon.</div>
-            )}
           </form>
-        </div>
-      </div>
-      {/* Map or Illustration */}
-      <div className="w-full max-w-4xl flex justify-center">
-        <div className="w-full h-64 bg-gradient-to-tr from-blue-100 via-white to-purple-100 rounded-3xl shadow-inner flex items-center justify-center">
-          <MapPin className="w-20 h-20 text-blue-300" />
-          <span className="ml-4 text-blue-700 font-bold text-lg">Find us in Kabul, Afghanistan</span>
         </div>
       </div>
     </div>

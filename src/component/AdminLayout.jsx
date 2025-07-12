@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
 import { getUserData, logout } from '../utils/auth';
+import NotificationBell from './NotificationBell';
 
 function AdminLayout() {
   const [user, setUser] = useState(null);
@@ -98,7 +99,18 @@ function AdminLayout() {
         </svg>
       ),
       description: 'Manage site statistics'
-    }
+    },
+    {
+      name: 'Contact Messages',
+      path: '/admin/contact-messages',
+      icon: (
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+      ),
+      description: 'View contact form submissions'
+    },
+
   ];
 
   return (
@@ -209,23 +221,13 @@ function AdminLayout() {
                 <p className="text-sm text-gray-600">Welcome back, {user?.username}</p>
               </div>
             </div>
-            
             <div className="flex items-center space-x-4">
-              <div className="hidden lg:flex items-center space-x-2 text-sm text-gray-600">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span>{new Date().toLocaleDateString()}</span>
+              <NotificationBell />
+              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                <span className="text-white text-sm font-semibold">
+                  {user?.username?.charAt(0).toUpperCase()}
+                </span>
               </div>
-              <button
-                onClick={() => navigate('/')}
-                className="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition-colors"
-              >
-                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                </svg>
-                View Public Site
-              </button>
             </div>
           </div>
         </div>

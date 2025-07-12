@@ -28,8 +28,10 @@ import TourDetailPage from "./component/TourDetailPage";
 import HomePage from "./HomePage";
 import GroupTours from "./component/GroupTours";
 import Services from "./component/Services";
-import Contact from "./component/Contact";
+
 import AdminStatsManager from "./component/AdminStatsManager";
+import Contact from "./component/Contact";
+import ContactTable from "./component/ContactTable";
 
 const App = () => {
   const [authInitialized, setAuthInitialized] = useState(false);
@@ -59,6 +61,7 @@ const App = () => {
             <>
               <Navbar />
               <HomePage />
+              {/* <ContactTable/> */}
             </>
           }
         />
@@ -132,13 +135,21 @@ const App = () => {
             </>
           }
         />
-
         <Route
           path="/contact"
           element={
             <>
               <Navbar />
               <Contact />
+            </>
+          }
+        />
+        <Route
+          path="/contact-table"
+          element={
+            <>
+              <Navbar />
+              <ContactTable />
             </>
           }
         />
@@ -161,6 +172,7 @@ const App = () => {
           <Route path="card-manager" element={<AdminCardManager />} />
           <Route path="hotel-manager" element={<AdminHotelManager />} />
           <Route path="detail-manager" element={<AdminDetailPageManager />} />
+          <Route path="contact-messages" element={<ContactTable />} />
           <Route
             path="/admin/stats-manager"
             element={

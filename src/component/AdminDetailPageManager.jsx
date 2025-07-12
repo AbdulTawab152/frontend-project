@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const API_BASE_URL = "https://project-backend-5sjw.onrender.com";
+const API_BASE_URL = "http://localhost:5001";
 
 function AdminDetailPageManager() {
   const [activeTab, setActiveTab] = useState('hotels');

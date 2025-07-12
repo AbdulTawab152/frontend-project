@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { getUserData } from '../utils/auth';
+import ContactTable from './ContactTable';
 
-const API_BASE_URL = "https://project-backend-5sjw.onrender.com";
+const API_BASE_URL = "http://localhost:5001";
 
 function AdminDashboard() {
   const [stats, setStats] = useState({
@@ -12,6 +13,7 @@ function AdminDashboard() {
     totalHotelBookings: 0,
     totalHotels: 0,
     totalCards: 0,
+
     recentBookings: []
   });
   const [loading, setLoading] = useState(true);
@@ -35,7 +37,7 @@ function AdminDashboard() {
       const [bookingsResponse, hotelsResponse, cardsResponse] = await Promise.all([
         axios.get(`${API_BASE_URL}/api/bookings`),
         axios.get(`${API_BASE_URL}/api/hotels`),
-        axios.get(`${API_BASE_URL}/api/cards`)
+        axios.get(`${API_BASE_URL}/api/cards`),
       ]);
       
       const allBookings = bookingsResponse.data;
@@ -146,7 +148,8 @@ function AdminDashboard() {
       gradient: 'from-orange-500 to-orange-600',
       bgGradient: 'from-orange-50 to-orange-100',
       path: '/admin/hotels'
-    }
+    },
+
   ];
 
   const quickActions = [
@@ -171,7 +174,8 @@ function AdminDashboard() {
       ),
       path: '/admin/cards',
       gradient: 'from-purple-500 to-purple-600'
-    }
+    },
+
   ];
 
 
@@ -379,6 +383,17 @@ function AdminDashboard() {
             </div>
           )}
         </div>
+      </div>
+
+      {/* Contact Messages Section */}
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 lg:p-8">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl lg:text-2xl font-bold text-gray-900">Contact Messages</h2>
+          <div className="flex items-center space-x-2">
+            <span className="text-sm text-gray-500">View all contact submissions</span>
+          </div>
+        </div>
+        <ContactTable />
       </div>
     </div>
   );

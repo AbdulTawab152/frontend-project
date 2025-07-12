@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const DEFAULT_IMAGE = "https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1200&q=80";
-const API_BASE_URL = "https://project-backend-5sjw.onrender.com";
+const API_BASE_URL = "http://localhost:5001";
 
 function CardList({ filterFn, headerTitle = 'Discover Amazing Tours', headerDesc = 'Explore the best group tours and travel packages across Afghanistan' }) {
   const [cards, setCards] = useState([]);

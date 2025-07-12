@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Bell, X } from 'lucide-react';
 import io from 'socket.io-client';
 
-const API_BASE_URL = 'http://localhost:5001';
+const API_BASE_URL = 'https://project-backend-5sjw.onrender.com';
 
 const NotificationBell = () => {
   const [notifications, setNotifications] = useState([]);

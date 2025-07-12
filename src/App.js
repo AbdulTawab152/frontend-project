@@ -32,6 +32,7 @@ import Services from "./component/Services";
 import AdminStatsManager from "./component/AdminStatsManager";
 import Contact from "./component/Contact";
 import ContactTable from "./component/ContactTable";
+import Footer from "./component/Footer";
 
 const App = () => {
   const [authInitialized, setAuthInitialized] = useState(false);
@@ -61,7 +62,7 @@ const App = () => {
             <>
               <Navbar />
               <HomePage />
-              {/* <ContactTable/> */}
+              <Footer />
             </>
           }
         />
@@ -74,6 +75,7 @@ const App = () => {
               <div className="p-4">
                 <HotelList />
               </div>
+              <Footer />
             </>
           }
         />
@@ -84,6 +86,7 @@ const App = () => {
             <>
               <Navbar />
               <HotelDetailPage />
+              <Footer />
             </>
           }
         />
@@ -94,6 +97,7 @@ const App = () => {
             <>
               <Navbar />
               <TourDetailPage />
+              <Footer />
             </>
           }
         />
@@ -106,6 +110,7 @@ const App = () => {
               <div className="p-4">
                 <HotelBooking />
               </div>
+              <Footer />
             </>
           }
         />
@@ -118,13 +123,22 @@ const App = () => {
               <div className="p-4">
                 <BookingPage />
               </div>
+              <Footer />
             </>
           }
         />
 
         <Route path="/login" element={<Login />} />
 
-        <Route path="/group-tours" element={<GroupTours />} />
+        <Route
+          path="/group-tours"
+          element={
+            <>
+              <GroupTours />
+              <Footer />
+            </>
+          }
+        />
 
         <Route
           path="/services"
@@ -132,6 +146,7 @@ const App = () => {
             <>
               <Navbar />
               <Services />
+              <Footer />
             </>
           }
         />
@@ -141,6 +156,7 @@ const App = () => {
             <>
               <Navbar />
               <Contact />
+              <Footer />
             </>
           }
         />
@@ -150,6 +166,7 @@ const App = () => {
             <>
               <Navbar />
               <ContactTable />
+              <Footer />
             </>
           }
         />

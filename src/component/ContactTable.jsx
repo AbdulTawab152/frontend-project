@@ -10,6 +10,7 @@ const ContactTable = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [contactToDelete, setContactToDelete] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
     fetchContacts();
@@ -20,7 +21,7 @@ const ContactTable = () => {
       setLoading(true);
       setError('');
       
-      const response = await axios.get('http://localhost:5001/api/contacts');
+      const response = await axios.get('https://project-backend-5sjw.onrender.com/api/contacts');
       setContacts(response.data.contacts || []);
     } catch (error) {
       console.error('Error fetching contacts:', error);
@@ -45,7 +46,7 @@ const ContactTable = () => {
     
     try {
       setDeleteLoading(true);
-      await axios.delete(`http://localhost:5001/api/contacts/${contactToDelete._id}`);
+      await axios.delete(`https://project-backend-5sjw.onrender.com/api/contacts/${contactToDelete._id}`);
       
       // Remove from local state
       setContacts(contacts.filter(c => c._id !== contactToDelete._id));
@@ -58,6 +59,9 @@ const ContactTable = () => {
       setDeleteLoading(false);
     }
   };
+
+  // Get displayed contacts (5 or all)
+  const displayedContacts = showAll ? contacts : contacts.slice(0, 5);
 
   if (loading) {
     return (
@@ -153,7 +157,7 @@ const ContactTable = () => {
         </div>
       ) : (
         <div className="space-y-4">
-          {contacts.map((contact) => (
+          {displayedContacts.map((contact) => (
             <div key={contact._id} className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all duration-300">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center space-x-4">
@@ -226,6 +230,32 @@ const ContactTable = () => {
               </div>
             </div>
           ))}
+
+          {/* See More Button */}
+          {contacts.length > 5 && (
+            <div className="text-center pt-4">
+              <button
+                onClick={() => setShowAll(!showAll)}
+                className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-105"
+              >
+                {showAll ? (
+                  <>
+                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                    </svg>
+                    Show Less
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                    See More ({contacts.length - 5} more)
+                  </>
+                )}
+              </button>
+            </div>
+          )}
         </div>
       )}
 

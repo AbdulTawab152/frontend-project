@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5001/api/admin/stats';
+const API_URL = 'https://project-backend-5sjw.onrender.com/api/admin/stats';
 
 const AdminStatsManager = () => {
   const [stats, setStats] = useState([]);

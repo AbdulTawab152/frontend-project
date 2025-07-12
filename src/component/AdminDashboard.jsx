@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { getUserData } from '../utils/auth';
-import ContactTable from './ContactTable';
 
-const API_BASE_URL = "http://localhost:5001";
+const API_BASE_URL = "https://project-backend-5sjw.onrender.com";
 
 function AdminDashboard() {
   const [stats, setStats] = useState({
@@ -385,16 +384,7 @@ function AdminDashboard() {
         </div>
       </div>
 
-      {/* Contact Messages Section */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 lg:p-8">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl lg:text-2xl font-bold text-gray-900">Contact Messages</h2>
-          <div className="flex items-center space-x-2">
-            <span className="text-sm text-gray-500">View all contact submissions</span>
-          </div>
-        </div>
-        <ContactTable />
-      </div>
+
     </div>
   );
 }

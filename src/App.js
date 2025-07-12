@@ -62,7 +62,7 @@ const App = () => {
             <>
               <Navbar />
               <HomePage />
-              <Footer />
+              {/* <Footer /> */}
             </>
           }
         />

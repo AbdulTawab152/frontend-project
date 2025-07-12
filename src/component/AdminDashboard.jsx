@@ -31,16 +31,15 @@ function AdminDashboard() {
     try {
       setLoading(true);
       
-      // Fetch all bookings
-      const bookingsResponse = await axios.get(`${API_BASE_URL}/api/bookings`);
+      // Fetch all data in parallel for faster loading
+      const [bookingsResponse, hotelsResponse, cardsResponse] = await Promise.all([
+        axios.get(`${API_BASE_URL}/api/bookings`),
+        axios.get(`${API_BASE_URL}/api/hotels`),
+        axios.get(`${API_BASE_URL}/api/cards`)
+      ]);
+      
       const allBookings = bookingsResponse.data;
-      
-      // Fetch hotels
-      const hotelsResponse = await axios.get(`${API_BASE_URL}/api/hotels`);
       const hotels = hotelsResponse.data;
-      
-      // Fetch cards
-      const cardsResponse = await axios.get(`${API_BASE_URL}/api/cards`);
       const cards = cardsResponse.data;
 
       // Calculate stats
@@ -62,6 +61,15 @@ function AdminDashboard() {
       });
     } catch (error) {
       console.error('Error fetching dashboard stats:', error);
+      // Set default stats on error
+      setStats({
+        totalBookings: 0,
+        totalGroupBookings: 0,
+        totalHotelBookings: 0,
+        totalHotels: 0,
+        totalCards: 0,
+        recentBookings: []
+      });
     } finally {
       setLoading(false);
     }

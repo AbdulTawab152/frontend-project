@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { setAuthToken, setUserData, isAuthenticated } from '../utils/auth';
 
-const API_BASE_URL = "http://localhost:5000";
+const API_BASE_URL = "https://project-backend-5sjw.onrender.com";
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -35,24 +35,24 @@ function Login() {
     setError('');
 
     try {
-      console.log('🔍 Attempting login with username:', formData.username);
-      
       const response = await axios.post(`${API_BASE_URL}/api/auth/login`, formData);
-      
-      console.log('✅ Login successful, response:', response.data);
       
       // Store token and user data using auth utilities
       setAuthToken(response.data.token);
       setUserData(response.data.user);
       
-      console.log('✅ Token and user data stored, redirecting to dashboard...');
-      
       // Redirect to admin dashboard
       navigate('/admin/dashboard');
     } catch (err) {
-      console.error('❌ Login error:', err);
-      console.error('❌ Error response:', err.response?.data);
-      setError(err.response?.data?.error || 'Login failed. Please try again.');
+      if (err.code === 'ERR_NETWORK') {
+        setError('Cannot connect to server. Please check your internet connection.');
+      } else if (err.response?.status === 401) {
+        setError('Invalid username or password. Please try again.');
+      } else if (err.response?.status === 500) {
+        setError('Server error. Please try again later.');
+      } else {
+        setError(err.response?.data?.error || 'Login failed. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
@@ -186,4 +186,4 @@ function Login() {
   );
 }
 
-export default Login; 
+export default Login;

@@ -1,11 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
 } from "react-router-dom";
-import { initializeAuth } from "./utils/auth";
+import { initializeAuth, isAuthenticated } from "./utils/auth";
 import Navbar from "./component/Navbar";
 import CardList from "./component/CardList";
 import "./index.css";
@@ -29,12 +29,25 @@ import HomePage from "./HomePage";
 import GroupTours from "./component/GroupTours";
 import Services from "./component/Services";
 import Contact from "./component/Contact";
+import AdminStatsManager from "./component/AdminStatsManager";
 
 const App = () => {
-  // Initialize authentication state on app startup
+  const [authInitialized, setAuthInitialized] = useState(false);
+
+  // Fast initialization
   useEffect(() => {
     initializeAuth();
+    setAuthInitialized(true);
   }, []);
+
+  // Show minimal loading
+  if (!authInitialized) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
 
   return (
     <Router>
@@ -148,6 +161,14 @@ const App = () => {
           <Route path="card-manager" element={<AdminCardManager />} />
           <Route path="hotel-manager" element={<AdminHotelManager />} />
           <Route path="detail-manager" element={<AdminDetailPageManager />} />
+          <Route
+            path="/admin/stats-manager"
+            element={
+              <ProtectedRoute>
+                <AdminStatsManager />
+              </ProtectedRoute>
+            }
+          />
         </Route>
 
         {/* Redirect any unknown routes to home */}

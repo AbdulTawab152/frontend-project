@@ -88,6 +88,16 @@ function AdminLayout() {
         </svg>
       ),
       description: 'Manage hotel reservations'
+    },
+    {
+      name: 'Site Stats',
+      path: '/admin/stats-manager',
+      icon: (
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 17a2 2 0 104 0 2 2 0 00-4 0zm-7-6a2 2 0 104 0 2 2 0 00-4 0zm14 2a2 2 0 100-4 2 2 0 000 4zm-7 6a2 2 0 100-4 2 2 0 000 4zm-7-6a2 2 0 100-4 2 2 0 000 4zm14 2a2 2 0 100-4 2 2 0 000 4z" />
+        </svg>
+      ),
+      description: 'Manage site statistics'
     }
   ];
 

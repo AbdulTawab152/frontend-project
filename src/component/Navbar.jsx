@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, ChevronDown, ChevronUp, HelpCircle, Briefcase } from 'lucide-react';
 
 
@@ -26,10 +26,14 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showServices, setShowServices] = useState(false);
   const [openFaq, setOpenFaq] = useState(null);
+  const location = useLocation();
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const toggleServices = () => setShowServices((v) => !v);
   const toggleFaq = (idx) => setOpenFaq(openFaq === idx ? null : idx);
+
+  // Helper to check if a path is active
+  const isActive = (path) => location.pathname === path;
 
   return (
     <nav className="backdrop-blur-md bg-white/20 border-b border-white/30 shadow-lg sticky top-0 z-50 transition-all duration-300">
@@ -45,13 +49,11 @@ const Navbar = () => {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex space-x-8 items-center">
-            <Link to="/" className="nav-link">Home</Link>
-            <Link to="/group-tours" className="nav-link">Group Tours</Link>
-                          <Link to="/hotels" className="nav-link">Hotels</Link>
-              <Link to="/services" className="nav-link">Services</Link>
-              <Link to="/contact" className="nav-link">Contact</Link>
-    
-            {/* <Link to="/login" className="bg-blue-800 text-white px-5 py-2 rounded-full font-semibold shadow hover:bg-blue-900 transition-colors duration-200 border-2 border-blue-800 hover:border-blue-900">Admin Login</Link> */}
+            <Link to="/" className={`nav-link ${isActive('/') ? 'active-nav-link' : ''}`}>Home</Link>
+            <Link to="/group-tours" className={`nav-link ${isActive('/group-tours') ? 'active-nav-link' : ''}`}>Group Tours</Link>
+            <Link to="/hotels" className={`nav-link ${isActive('/hotels') ? 'active-nav-link' : ''}`}>Hotels</Link>
+            <Link to="/services" className={`nav-link ${isActive('/services') ? 'active-nav-link' : ''}`}>Services</Link>
+            <Link to="/contact" className={`nav-link ${isActive('/contact') ? 'active-nav-link' : ''}`}>Contact</Link>
           </div>
 
           {/* Mobile Hamburger */}
@@ -62,19 +64,20 @@ const Navbar = () => {
           </div>
         </div>
 
+        </div>
+
         {/* Mobile Menu Dropdown */}
         {isOpen && (
           <div className="md:hidden mt-2 space-y-2 pb-4 bg-white/80 backdrop-blur-md rounded-b-xl shadow animate-fade-in-down px-4 pt-4 border border-white/30">
-            <Link to="/" onClick={toggleMenu} className="mobile-nav-link">Home</Link>
-            <Link to="/group-tours" onClick={toggleMenu} className="mobile-nav-link">Group Tours</Link>
-                          <Link to="/hotels" onClick={toggleMenu} className="mobile-nav-link">Hotels</Link>
-              <Link to="/services" onClick={toggleMenu} className="mobile-nav-link">Services</Link>
-              <Link to="/contact" onClick={toggleMenu} className="mobile-nav-link">Contact</Link>
-    
+            <Link to="/" onClick={toggleMenu} className={`mobile-nav-link ${isActive('/') ? 'active-mobile-nav-link' : ''}`}>Home</Link>
+            <Link to="/group-tours" onClick={toggleMenu} className={`mobile-nav-link ${isActive('/group-tours') ? 'active-mobile-nav-link' : ''}`}>Group Tours</Link>
+            <Link to="/hotels" onClick={toggleMenu} className={`mobile-nav-link ${isActive('/hotels') ? 'active-mobile-nav-link' : ''}`}>Hotels</Link>
+            <Link to="/services" onClick={toggleMenu} className={`mobile-nav-link ${isActive('/services') ? 'active-mobile-nav-link' : ''}`}>Services</Link>
+            <Link to="/contact" onClick={toggleMenu} className={`mobile-nav-link ${isActive('/contact') ? 'active-mobile-nav-link' : ''}`}>Contact</Link>
             <Link to="/login" onClick={toggleMenu} className="block bg-blue-800 text-white px-5 py-2 rounded-full font-semibold shadow hover:bg-blue-900 w-fit transition-colors border-2 border-blue-800 hover:border-blue-900">Admin Login</Link>
           </div>
         )}
-      </div>
+      
       {/* Custom styles for nav links */}
       <style>{`
         .nav-link {
@@ -102,6 +105,13 @@ const Navbar = () => {
         .nav-link:hover:after {
           transform: scaleX(1);
         }
+        .active-nav-link {
+          color: #2563eb;
+          font-weight: 700;
+        }
+        .active-nav-link:after {
+          transform: scaleX(1);
+        }
         .mobile-nav-link {
           display: block;
           color: #1e3a8a;
@@ -113,6 +123,11 @@ const Navbar = () => {
         .mobile-nav-link:hover {
           background: #1e3a8a;
           color: #fff;
+        }
+        .active-mobile-nav-link {
+          background: #1e3a8a;
+          color: #fff;
+          font-weight: 700;
         }
       `}</style>
     </nav>

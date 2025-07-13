@@ -33,6 +33,7 @@ import AdminStatsManager from "./component/AdminStatsManager";
 import Contact from "./component/Contact";
 import ContactTable from "./component/ContactTable";
 import Footer from "./component/Footer";
+import ScrollToTop from "./ScrollToTop";
 
 const App = () => {
   const [authInitialized, setAuthInitialized] = useState(false);
@@ -54,6 +55,7 @@ const App = () => {
 
   return (
     <Router>
+      <ScrollToTop />
       <Routes>
         {/* Public Routes */}
         <Route

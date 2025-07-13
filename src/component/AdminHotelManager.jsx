@@ -25,7 +25,7 @@ function AdminHotelManager() {
     image: null,
     images: [],
     amenities: '',
-    roomTypes: '',
+    roomTypes: [], // now an array of objects
     discounts: [],
     groupTourInfo: '',
     bookingEnabled: true
@@ -61,7 +61,7 @@ function AdminHotelManager() {
       image: null,
       images: hotel.images || [],
       amenities: hotel.amenities ? hotel.amenities.join(', ') : '',
-      roomTypes: hotel.roomTypes ? hotel.roomTypes.join(', ') : '',
+      roomTypes: Array.isArray(hotel.roomTypes) ? hotel.roomTypes : [],
       discounts: hotel.discounts || [],
       groupTourInfo: hotel.groupTourInfo || '',
       bookingEnabled: hotel.bookingEnabled !== false
@@ -89,11 +89,8 @@ function AdminHotelManager() {
 
     try {
       const form = new FormData();
-      
-      // Add all form fields
       for (let key in formData) {
         if (key === 'images') {
-          // Handle multiple images
           if (formData[key] && formData[key].length > 0) {
             formData[key].forEach((image, index) => {
               if (image instanceof File) {
@@ -103,18 +100,18 @@ function AdminHotelManager() {
           }
         } else if (key === 'image' && formData[key] instanceof File) {
           form.append(key, formData[key]);
-        } else if (key === 'amenities' || key === 'roomTypes') {
+        } else if (key === 'amenities') {
           if (formData[key]) {
             form.append(key, JSON.stringify(formData[key].split(',').map(item => item.trim())));
           }
+        } else if (key === 'roomTypes') {
+          form.append(key, JSON.stringify(formData[key]));
         } else if (key === 'discounts') {
           form.append(key, JSON.stringify(formData[key]));
         } else if (key !== 'image' && key !== 'images') {
           form.append(key, formData[key]);
         }
       }
-
-      console.log('Sending form data:', Object.fromEntries(form.entries()));
       await axios.put(`${API_BASE_URL}/api/hotels/${editingHotel._id}`, form);
       setSuccess('Hotel updated successfully');
       setShowEditModal(false);
@@ -138,6 +135,22 @@ function AdminHotelManager() {
     } else {
       setFormData({ ...formData, [e.target.name]: e.target.value });
     }
+  };
+
+  // Room Types Handlers
+  const addRoomType = () => {
+    setFormData({
+      ...formData,
+      roomTypes: [...formData.roomTypes, { name: '', price: '', description: '', capacity: '' }]
+    });
+  };
+  const updateRoomType = (idx, field, value) => {
+    const updated = [...formData.roomTypes];
+    updated[idx][field] = value;
+    setFormData({ ...formData, roomTypes: updated });
+  };
+  const removeRoomType = idx => {
+    setFormData({ ...formData, roomTypes: formData.roomTypes.filter((_, i) => i !== idx) });
   };
 
   const addDiscount = () => {
@@ -430,14 +443,61 @@ function AdminHotelManager() {
                     onChange={handleInputChange}
                     className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
-                  <input
-                    type="text"
-                    name="roomTypes"
-                    placeholder="Room Types (comma separated)"
-                    value={formData.roomTypes}
-                    onChange={handleInputChange}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
+                </div>
+                {/* Room Types Section */}
+                <div className="space-y-4 mt-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-semibold text-gray-900">Room Types</h3>
+                    <button
+                      type="button"
+                      onClick={addRoomType}
+                      className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                    >
+                      Add Room Type
+                    </button>
+                  </div>
+                  {formData.roomTypes.length === 0 && (
+                    <div className="text-gray-500">No room types added yet.</div>
+                  )}
+                  {formData.roomTypes.map((room, idx) => (
+                    <div key={idx} className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 bg-gray-50 rounded-lg">
+                      <input
+                        type="text"
+                        placeholder="Room Name"
+                        value={room.name}
+                        onChange={e => updateRoomType(idx, 'name', e.target.value)}
+                        className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                      />
+                      <input
+                        type="number"
+                        placeholder="Price"
+                        value={room.price}
+                        onChange={e => updateRoomType(idx, 'price', e.target.value)}
+                        className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                      />
+                      <input
+                        type="text"
+                        placeholder="Description"
+                        value={room.description}
+                        onChange={e => updateRoomType(idx, 'description', e.target.value)}
+                        className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                      />
+                      <input
+                        type="number"
+                        placeholder="Capacity"
+                        value={room.capacity}
+                        onChange={e => updateRoomType(idx, 'capacity', e.target.value)}
+                        className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeRoomType(idx)}
+                        className="bg-red-600 text-white px-3 py-2 rounded hover:bg-red-700 transition-colors mt-2 md:mt-0"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ))}
                 </div>
 
                 {/* Discounts */}

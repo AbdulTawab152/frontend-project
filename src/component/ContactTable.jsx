@@ -46,7 +46,7 @@ const ContactTable = () => {
     
     try {
       setDeleteLoading(true);
-      await axios.delete(`https://project-backend-5sjw.onrender.com/api/contacts/${contactToDelete._id}`);
+      await axios.delete(`https://project-backend-5sjw.onrender.com/contacts/${contactToDelete._id}`);
       
       // Remove from local state
       setContacts(contacts.filter(c => c._id !== contactToDelete._id));

@@ -5,6 +5,7 @@ const Contact = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    phone: '',
     subject: '',
     message: ''
   });
@@ -28,20 +29,39 @@ const Contact = () => {
     try {
       console.log('Sending contact form data:', formData);
       
-      const response = await axios.post('https://project-backend-5sjw.onrender.com/api/contact', formData, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        timeout: 10000, // 10 second timeout
-      });
+      let response;
+      try {
+        // Try Render API first
+        response = await axios.post('https://project-backend-5sjw.onrender.com/api/contacts', formData, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          timeout: 10000,
+        });
+      } catch (renderError) {
+        console.error('Error with Render API:', renderError);
+        // If Render fails, try local API as fallback (for local dev only)
+        try {
+          // Only use the Render API so all data goes to the production database (contact table) and shows in your dashboard
+          response = await axios.post('https://project-backend-5sjw.onrender.com/api/contacts', formData, {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            timeout: 10000,
+          });
+        } catch (localError) {
+          // If both fail, throw the original Render error
+          throw renderError;
+        }
+      }
 
       console.log('Contact form response:', response.data);
 
-      if (response.data.success) {
+      if (response.data.message) {
         setSuccess(true);
-        setFormData({ name: '', email: '', subject: '', message: '' });
+        setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
       } else {
-        setError(response.data.message || 'Failed to send message');
+        setError(response.data.error || 'Failed to send message');
       }
     } catch (error) {
       console.error('Contact form error:', error);
@@ -49,7 +69,7 @@ const Contact = () => {
       if (error.response) {
         // Server responded with error status
         console.error('Error response:', error.response.data);
-        setError(error.response.data?.message || `Server error: ${error.response.status}`);
+        setError(error.response.data?.error || `Server error: ${error.response.status}`);
       } else if (error.request) {
         // Request was made but no response received
         console.error('No response received:', error.request);
@@ -207,7 +227,7 @@ const Contact = () => {
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Full Name
+                    Full Name *
                   </label>
                   <input
                     type="text"
@@ -222,7 +242,7 @@ const Contact = () => {
 
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Email Address
+                    Email Address *
                   </label>
                   <input
                     type="email"
@@ -238,7 +258,21 @@ const Contact = () => {
 
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Subject
+                  Phone Number
+                </label>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                  placeholder="+1 (555) 123-4567"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Subject *
                 </label>
                 <input
                   type="text"
@@ -253,7 +287,7 @@ const Contact = () => {
 
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Message
+                  Message *
                 </label>
                 <textarea
                   name="message"
